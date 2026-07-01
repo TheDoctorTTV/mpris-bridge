@@ -1,0 +1,14 @@
+[Unit]
+Description=MPRIS Bridge REST API
+Documentation=https://github.com/nuttylmao/smtc-bridge
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/mpris-bridge --config %h/.config/mpris-bridge/settings.ini
+WorkingDirectory=%h/.config/mpris-bridge
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target
