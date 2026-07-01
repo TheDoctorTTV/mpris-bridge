@@ -76,8 +76,8 @@ def main(argv: list[str] | None = None) -> int:
     copy_file(root / "settings.ini", staging / "settings.ini")
     copy_file(root / "README.md", staging / "README.md")
     copy_file(root / "systemd" / "mpris-bridge.service", staging / "systemd" / "mpris-bridge.service")
-    copy_file(root / "scripts" / "install_systemd_user.sh", staging / "scripts" / "install_systemd_user.sh", executable=True)
-    copy_file(root / "scripts" / "uninstall_systemd_user.sh", staging / "scripts" / "uninstall_systemd_user.sh", executable=True)
+    copy_file(root / "scripts" / "install_systemd_user.sh", staging / "install_systemd_user.sh", executable=True)
+    copy_file(root / "scripts" / "uninstall_systemd_user.sh", staging / "uninstall_systemd_user.sh", executable=True)
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
     zip_path = args.output_dir / f"{package_name}.zip"

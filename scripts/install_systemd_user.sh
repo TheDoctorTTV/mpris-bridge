@@ -3,12 +3,38 @@ set -euo pipefail
 
 SERVICE_NAME="mpris-bridge.service"
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
-ROOT_DIR="$(cd -- "${SCRIPT_DIR}/.." >/dev/null 2>&1 && pwd -P)"
+
+if [[ -d "${SCRIPT_DIR}/bin" && -d "${SCRIPT_DIR}/systemd" ]]; then
+  ROOT_DIR="${SCRIPT_DIR}"
+else
+  ROOT_DIR="$(cd -- "${SCRIPT_DIR}/.." >/dev/null 2>&1 && pwd -P)"
+fi
 
 BIN_DIR="${XDG_BIN_HOME:-${HOME}/.local/bin}"
 CONFIG_HOME="${XDG_CONFIG_HOME:-${HOME}/.config}"
 CONFIG_DIR="${CONFIG_HOME}/mpris-bridge"
 SYSTEMD_USER_DIR="${CONFIG_HOME}/systemd/user"
+
+read_config_port() {
+  local config_file="${CONFIG_DIR}/settings.ini"
+  local port=""
+
+  if [[ -f "${config_file}" ]]; then
+    port="$(awk -F '=' '
+      /^[[:space:]]*port[[:space:]]*=/ {
+        gsub(/[[:space:]]/, "", $2)
+        print $2
+        exit
+      }
+    ' "${config_file}")"
+  fi
+
+  if [[ "${port}" =~ ^[0-9]+$ ]]; then
+    echo "${port}"
+  else
+    echo "5000"
+  fi
+}
 
 if [[ -n "${MPRIS_BRIDGE_BINARY:-}" ]]; then
   BINARY_SOURCE="${MPRIS_BRIDGE_BINARY}"
@@ -44,6 +70,8 @@ fi
 systemctl --user daemon-reload
 systemctl --user enable --now "${SERVICE_NAME}"
 
+PORT="$(read_config_port)"
+
 echo "Installed ${SERVICE_NAME}."
-echo "API: http://127.0.0.1:5000/now-playing"
+echo "API: http://127.0.0.1:${PORT}/now-playing"
 echo "Status: systemctl --user status ${SERVICE_NAME}"

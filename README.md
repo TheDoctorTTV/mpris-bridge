@@ -35,8 +35,10 @@ The built binary still reads an external `settings.ini` from the directory where
 The systemd setup is optional. From a release archive or this repo after building:
 
 ```bash
-scripts/install_systemd_user.sh
+./install_systemd_user.sh
 ```
+
+When running from a source checkout instead of an extracted release archive, use `scripts/install_systemd_user.sh`.
 
 This installs the binary to `~/.local/bin/mpris-bridge`, writes the user unit to `~/.config/systemd/user/mpris-bridge.service`, creates `~/.config/mpris-bridge/settings.ini` if needed, then enables and starts the user service.
 
@@ -51,8 +53,10 @@ journalctl --user -u mpris-bridge.service -f
 To uninstall the service and installed binary:
 
 ```bash
-scripts/uninstall_systemd_user.sh
+./uninstall_systemd_user.sh
 ```
+
+When running from a source checkout instead of an extracted release archive, use `scripts/uninstall_systemd_user.sh`.
 
 The uninstall script keeps `~/.config/mpris-bridge/settings.ini` by default. Pass `--purge-config` to remove it too, or `--keep-binary` to leave `~/.local/bin/mpris-bridge` in place.
 
@@ -67,8 +71,8 @@ The package script builds `dist/mpris-bridge` and creates `release/mpris-bridge-
 | Path | Purpose |
 | :--- | :--- |
 | `bin/mpris-bridge` | Single-file binary. |
-| `scripts/install_systemd_user.sh` | Installs and starts the optional systemd user service. |
-| `scripts/uninstall_systemd_user.sh` | Stops and removes the optional systemd user service. |
+| `install_systemd_user.sh` | Installs and starts the optional systemd user service. |
+| `uninstall_systemd_user.sh` | Stops and removes the optional systemd user service. |
 | `systemd/mpris-bridge.service` | User service unit installed by the script. |
 | `settings.ini` | Default API host and port config. |
 | `README.md` | Usage docs. |
