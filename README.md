@@ -81,6 +81,7 @@ The package script builds `dist/mpris-bridge` and creates `release/mpris-bridge-
 
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
+| `GET` | `/` | Returns the current media state as JSON plus endpoint links. |
 | `GET` | `/now-playing` | Returns the current media state as JSON. |
 | `GET` | `/sessions` | Returns a JSON list of active media session IDs. |
 | `GET` | `/sessions?format=html` | Returns a simple browser view of active sessions. |
