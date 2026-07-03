@@ -60,13 +60,20 @@ When running from a source checkout instead of an extracted release archive, use
 
 The uninstall script keeps `~/.config/mpris-bridge/settings.ini` by default. Pass `--purge-config` to remove it too, or `--keep-binary` to leave `~/.local/bin/mpris-bridge` in place.
 
-## Package a Release Zip
+## Package a Release
 
 ```bash
 python scripts/package_release.py
 ```
 
-The package script builds `dist/mpris-bridge` and creates `release/mpris-bridge-<version>-linux-<arch>.zip` containing:
+The package script builds `dist/mpris-bridge` and creates two release assets:
+
+| Path | Purpose |
+| :--- | :--- |
+| `release/mpris-bridge` | Raw single-file binary for direct downloads and update systems. |
+| `release/mpris-bridge-<version>-linux-<arch>-installer.zip` | Installer archive with the binary, config, service unit, and helper scripts. |
+
+The installer zip contains:
 
 | Path | Purpose |
 | :--- | :--- |

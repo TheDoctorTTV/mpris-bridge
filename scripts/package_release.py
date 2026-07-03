@@ -87,7 +87,7 @@ def main(argv: list[str] | None = None) -> int:
         "--output-dir",
         default=root / "release",
         type=Path,
-        help="Directory that receives the release zip.",
+        help="Directory that receives the release artifacts.",
     )
     args = parser.parse_args(argv)
 
@@ -101,9 +101,10 @@ def main(argv: list[str] | None = None) -> int:
         print("Missing dist/mpris-bridge. Run python scripts/build_binary.py first.", file=sys.stderr)
         return 1
 
-    # Create a fresh staging directory for the release contents.
+    # Create a fresh staging directory for the installer release contents.
     package_name = f"mpris-bridge-{args.version}-linux-{machine}"
-    staging = root / "build" / "release" / package_name
+    installer_name = f"{package_name}-installer"
+    staging = root / "build" / "release" / installer_name
     if staging.exists():
         shutil.rmtree(staging)
 
@@ -115,12 +116,15 @@ def main(argv: list[str] | None = None) -> int:
     copy_file(root / "scripts" / "install_systemd_user.sh", staging / "install_systemd_user.sh", executable=True)
     copy_file(root / "scripts" / "uninstall_systemd_user.sh", staging / "uninstall_systemd_user.sh", executable=True)
 
-    # Write the final zip archive.
+    # Write the final release artifacts.
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    zip_path = args.output_dir / f"{package_name}.zip"
+    raw_binary_path = args.output_dir / "mpris-bridge"
+    zip_path = args.output_dir / f"{installer_name}.zip"
+    copy_file(binary, raw_binary_path, executable=True)
     create_zip(staging, zip_path)
-    # Print the archive path for humans and CI logs.
+    # Print the artifact paths for humans and CI logs.
     print(f"Packaged {zip_path}")
+    print(f"Packaged {raw_binary_path}")
     return 0
 
 
